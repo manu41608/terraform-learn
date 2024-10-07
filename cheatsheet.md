@@ -2,7 +2,7 @@
 
 I created this Terraform Cheat Sheet for all Developers that want to learn and remember some of the key functions and concepts of Terraform, and have a quick reference guide to the basics of Terraform.
 
-
+terraform  azure examples : https://github.com/hashicorp/terraform-provider-azurerm/tree/main/examples
 ## Table of Contents
 - [Terraform Architecture](#terraform-architecture)
 - [Installation](#installation)
