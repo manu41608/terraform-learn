@@ -1,5 +1,5 @@
 reference : https://spacelift.io/blog/terraform-workspaces
-
+```hcl
 $ terraform workspace --help
 Usage: terraform [global options] workspace
 
@@ -14,7 +14,8 @@ Subcommands:
 
     by defaullt terraform will add default workspace .
 
-    to create :
+```
+ to create :
     terraform workspace new prod
 
     to show:
