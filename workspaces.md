@@ -15,6 +15,7 @@ Subcommands:
     by defaullt terraform will add default workspace .
 
 ```
+```hcl
  to create :
     terraform workspace new prod
 
