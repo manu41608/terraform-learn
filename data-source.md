@@ -5,6 +5,8 @@ Use this data source to access information about an existing resouces like keyva
 reference : https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault
 reference : https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault_secret
 
+about data source : https://spacelift.io/blog/terraform-data-sources-how-they-are-utilised#what-is-a-data-source-in-terraform
+
 ```hcl
 
 data "azurerm_key_vault" "example" {
