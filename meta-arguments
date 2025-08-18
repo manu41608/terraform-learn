@@ -1,0 +1,90 @@
+Got it 👍 — In Terraform, **`depends_on`** is a **meta-argument** that lets you explicitly tell Terraform that a resource depends on another, even if there isn’t a direct reference in its arguments.
+
+This is useful when Terraform cannot automatically detect the dependency.
+
+---
+
+### 🔹 Example 1: VM depends on Resource Group
+
+```hcl
+resource "azurerm_resource_group" "rg" {
+  name     = "example-rg"
+  location = "East US"
+}
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = "example-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  # Explicit dependency (not always required since RG is already referenced)
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
+}
+```
+
+👉 Here, even though `vnet` already references `rg`, we explicitly force Terraform to wait until the RG is created.
+
+---
+
+### 🔹 Example 2: VM depends on Custom Script Execution
+
+```hcl
+resource "null_resource" "preconfig" {
+  provisioner "local-exec" {
+    command = "echo Preparing environment..."
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "vm" {
+  name                = "example-vm"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  size                = "Standard_B1s"
+  admin_username      = "azureuser"
+
+  network_interface_ids = [azurerm_network_interface.nic.id]
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  depends_on = [
+    null_resource.preconfig
+  ]
+}
+```
+
+👉 This ensures the VM **only starts creation after** the `null_resource.preconfig` step finishes.
+
+---
+
+### 🔹 Example 3: Module Dependency
+
+```hcl
+module "networking" {
+  source = "./modules/network"
+}
+
+module "compute" {
+  source = "./modules/vm"
+
+  depends_on = [
+    module.networking
+  ]
+}
+```
+
+👉 Here, the **compute module won’t run until networking module finishes**.
+
+---
+
+✅ **Best Practice**:
+Use `depends_on` **only when Terraform cannot figure it out automatically**. Most of the time, referencing attributes (`resource_group_name = azurerm_resource_group.rg.name`) is enough.
+
+---
+
+Do you want me to show you a **real-world Jenkins + Terraform pipeline example** where `depends_on` is used (like VM waiting for NSG or VNet)?
